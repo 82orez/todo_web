@@ -6,8 +6,6 @@ const DivTodoList = styled.div`
     width: 100%;
     border: none;
     border-bottom: 1px solid;
-    //padding-top: 5px;
-    //padding-bottom: 5px;
     padding: 5px 0;
     margin-bottom: 10px;
   }
@@ -33,10 +31,12 @@ const TodoList = (props) => {
       {props.todoLists.map((todoList) => {
         return (
           <div key={todoList.id}>
-            <input type={'checkbox'} value={todoList.isDone} />
+            <input type={'checkbox'} />
             <div className={'content'}>{todoList.content}</div>
             <div>{todoList.createdDate}</div>
-            <Button>Del</Button>
+            <Button onClick={props.handleOnClickDel} value={todoList.id}>
+              Del
+            </Button>
           </div>
         );
       })}

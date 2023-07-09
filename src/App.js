@@ -1,7 +1,7 @@
 import Header from './components/Header';
 import styled from 'styled-components';
 import TodoEditor from './components/TodoEditor';
-import { useEffect, useRef,useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TodoList from './components/TodoList';
 
 const DivApp = styled.div`
@@ -29,8 +29,8 @@ function App() {
       .then((re) => re.json())
       // .then((data) => setTodoLists(data))
       .then((data) => {
-        console.log('good');
-        return setTodoLists(data);
+        console.log('good rendering');
+        setTodoLists(data);
       })
       .catch((e) => console.error(e));
   };
@@ -44,10 +44,11 @@ function App() {
 
   const handleOnClickAdd = () => {
     if (text.length === 0) {
-      alert('할 일을 입력해 주세요')
-      textRef.current.focus()
-      return
+      alert('할 일을 입력해 주세요');
+      textRef.current.focus();
+      return;
     }
+
     fetch('http://localhost:8080/todolist', {
       method: 'POST',
       headers: {
@@ -64,17 +65,35 @@ function App() {
       // !
       .then(() => callData())
       .then(() => {
-        setText('')
-        textRef.current.value =''
-        textRef.current.focus()
+        setText('');
+        textRef.current.value = '';
+        textRef.current.focus();
       });
+  };
+
+  const handleOnClickDel = (e) => {
+    fetch('http://localhost:8080/todolist', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        // ! id 값을 받아오기 위해 button 태그의 value 값을 이용.
+        id: e.target.value,
+      }),
+    })
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      // !
+      .then(() => callData())
+      .then(() => textRef.current.focus());
   };
 
   return (
     <DivApp>
       <Header />
-      <TodoEditor handleOnChange={handleOnChange} handleOnClickAdd={handleOnClickAdd} textRef={textRef}/>
-      <TodoList todoLists={todoLists} />
+      <TodoEditor handleOnChange={handleOnChange} handleOnClickAdd={handleOnClickAdd} textRef={textRef} />
+      <TodoList todoLists={todoLists} handleOnClickDel={handleOnClickDel} />
     </DivApp>
   );
 }
