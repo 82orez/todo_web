@@ -89,11 +89,29 @@ function App() {
       .then(() => textRef.current.focus());
   };
 
+  const handleOnChangeCheck = (e) => {
+    fetch('http://localhost:8080/todolist', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: e.target.value,
+        // ! 기존 값에서 바뀐(changed) checked 값을 API 로 넘겨 줌.
+        isDone: e.target.checked,
+      }),
+    })
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      // !
+      .then(() => callData());
+  };
+
   return (
     <DivApp>
       <Header />
       <TodoEditor handleOnChange={handleOnChange} handleOnClickAdd={handleOnClickAdd} textRef={textRef} />
-      <TodoList todoLists={todoLists} handleOnClickDel={handleOnClickDel} />
+      <TodoList todoLists={todoLists} handleOnClickDel={handleOnClickDel} handleOnChangeCheck={handleOnChangeCheck} />
     </DivApp>
   );
 }

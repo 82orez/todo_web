@@ -31,7 +31,11 @@ const TodoList = (props) => {
       {props.todoLists.map((todoList) => {
         return (
           <div key={todoList.id}>
-            <input type={'checkbox'} />
+            {todoList.isDone ? (
+              <input type={'checkbox'} checked={true} value={todoList.id} onChange={props.handleOnChangeCheck} />
+            ) : (
+              <input type={'checkbox'} value={todoList.id} checked={false} onChange={props.handleOnChangeCheck} />
+            )}
             <div className={'content'}>{todoList.content}</div>
             <div>{todoList.createdDate}</div>
             <Button onClick={props.handleOnClickDel} value={todoList.id}>
