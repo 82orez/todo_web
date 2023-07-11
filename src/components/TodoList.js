@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Button } from 'react-bootstrap';
+import { useMemo } from 'react';
 
 const DivTodoList = styled.div`
   & > input {
@@ -24,9 +25,26 @@ const DivTodoList = styled.div`
 `;
 
 const TodoList = (props) => {
+  const analyzeTodo = useMemo(() => {
+    console.log('Analyze 함수 호출됨!');
+    const totalNum = props.todoLists.length;
+    const doneNum = props.todoLists.filter((obj) => obj.isDone).length;
+    const noDoneNum = props.todoLists.filter((obj) => !obj.isDone).length;
+    return {
+      totalNum,
+      doneNum,
+      noDoneNum,
+    };
+  }, [props.todoLists]);
+  // ! useMemo 메서드는 함수 자체가 아닌 실행된 값을 반환하므로 analyzeTodo() 가 아니라 analyzeTodo.
+  const { totalNum, doneNum, noDoneNum } = analyzeTodo;
+
   return (
     <DivTodoList>
       <h4>TodoList</h4>
+      <h6>총갯수: {totalNum}</h6>
+      <h6>완료된 할 일: {doneNum}</h6>
+      <h6>미완료 할 일: {noDoneNum}</h6>
       <input type="text" placeholder={'검색어를 입력하세요.'} />
       {props.todoLists.map((todoList) => {
         return (
