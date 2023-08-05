@@ -25,7 +25,7 @@ function App() {
   const [todoLists, setTodoLists] = useState([]);
 
   const callData = () => {
-    fetch('http://localhost:8080/')
+    fetch('http://localhost:8080/todolist')
       .then((re) => re.json())
       // .then((data) => setTodoLists(data))
       .then((data) => {
