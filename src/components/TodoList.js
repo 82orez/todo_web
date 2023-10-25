@@ -22,9 +22,16 @@ const DivTodoList = styled.div`
   & > div > div.content {
     flex: 1;
   }
+
+  .createdDate {
+    @media (max-width: 500px) {
+      display: none;
+    }
+  }
 `;
 
 const TodoList = (props) => {
+  // useMemo : 의존성 배열 안의 props.todoLists 의 상태가 변할 때에만 재렌더링 실시.
   const analyzeTodo = useMemo(() => {
     console.log('Analyze 함수 호출됨!');
     const totalNum = props.todoLists.length;
@@ -55,7 +62,7 @@ const TodoList = (props) => {
               <input type={'checkbox'} value={todoList.id} checked={false} onChange={props.handleOnChangeCheck} />
             )}
             <div className={'content'}>{todoList.content}</div>
-            <div>{todoList.createdDate}</div>
+            <div className="createdDate">{todoList.createdDate}</div>
             <Button onClick={props.handleOnClickDel} value={todoList.id}>
               Del
             </Button>
@@ -67,3 +74,4 @@ const TodoList = (props) => {
 };
 
 export default TodoList;
+

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import TodoList from './components/TodoList';
 
 const DivApp = styled.div`
-  max-width: 500px;
+  max-width: 750px;
   width: 100%;
   margin: 0 auto;
   padding: 20px;
