@@ -18,7 +18,7 @@ const Header = () => {
       let nowKoreaTime = utcToZonedTime(nowUtc, koreaTimeZone);
 
       // 변환된 한국 로컬 시간을 원하는 형식으로 포맷팅합니다.
-      let formattedKoreaTime = format(nowKoreaTime, 'yyyy년 M월 d일 (E) a h시 m분', { locale: koLocale });
+      let formattedKoreaTime = format(nowKoreaTime, 'yyyy년 M월 d일 (E) a hh시 mm분 ss초', { locale: koLocale });
 
       setTime(formattedKoreaTime);
     };
