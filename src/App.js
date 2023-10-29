@@ -25,9 +25,7 @@ function App() {
   const [todoLists, setTodoLists] = useState([]);
 
   const callData = () => {
-    //! fetch('http://localhost:8080/todolist')
-    // fetch('https://52.78.141.0:8080/todolist')
-    fetch('https://todo.infothings.net/todolist')
+    fetch('http://localhost:8080/todolist')
       .then((re) => re.json())
       // .then((data) => setTodoLists(data))
       .then((data) => {
@@ -51,9 +49,7 @@ function App() {
       return;
     }
 
-    // ! fetch('http://localhost:8080/todolist', {
-    // fetch('https://52.78.141.0:8080/todolist', {
-    fetch('https://todo.infothings.net/todolist', {
+    fetch(`${process.env.REACT_APP_API_URL}/todolist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -76,9 +72,7 @@ function App() {
   };
 
   const handleOnClickDel = (e) => {
-    // ! fetch('http://localhost:8080/todolist', {
-    // fetch('https://52.78.141.0:8080/todolist', {
-    fetch('https://todo.infothings.net/todolist', {
+    fetch(`${process.env.REACT_APP_API_URL}/todolist`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -96,9 +90,7 @@ function App() {
   };
 
   const handleOnChangeCheck = (e) => {
-    // ! fetch('http://localhost:8080/todolist', {
-    // fetch('http://52.78.141.0:8080/todolist', {
-    fetch('https://todo.infothings.net/todolist', {
+    fetch(`${process.env.REACT_APP_API_URL}/todolist`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
