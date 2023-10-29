@@ -25,7 +25,7 @@ function App() {
   const [todoLists, setTodoLists] = useState([]);
 
   const callData = () => {
-    fetch('http://localhost:8080/todolist')
+    fetch(`${process.env.REACT_APP_API_URL}/todolist`)
       .then((re) => re.json())
       // .then((data) => setTodoLists(data))
       .then((data) => {
@@ -112,6 +112,7 @@ function App() {
       <Header />
       <TodoEditor handleOnChange={handleOnChange} handleOnClickAdd={handleOnClickAdd} textRef={textRef} />
       <TodoList todoLists={todoLists} handleOnClickDel={handleOnClickDel} handleOnChangeCheck={handleOnChangeCheck} />
+      <h6>v1.0</h6>
     </DivApp>
   );
 }
