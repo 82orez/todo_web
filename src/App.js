@@ -72,21 +72,27 @@ function App() {
   };
 
   const handleOnClickDel = (e) => {
-    fetch(`${process.env.REACT_APP_API_URL}/todolist`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        // ! id 값을 받아오기 위해 button 태그의 value 값을 이용.
-        id: e.target.value,
-      }),
-    })
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      // !
-      .then(() => callData())
-      .then(() => textRef.current.focus());
+    // 사용자에게 확인 메시지를 보여줍니다.
+    const userConfirm = window.confirm('정말로 삭제하시겠습니까?');
+
+    // 만약 사용자가 'OK' 를 클릭했다면, 삭제 요청을 진행합니다.
+    if (userConfirm) {
+      fetch(`${process.env.REACT_APP_API_URL}/todolist`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          // id 값을 받아오기 위해 button 태그의 value 값을 이용.
+          id: e.target.value,
+        }),
+      })
+        .then((response) => response.json())
+        .then((result) => console.log(result))
+        // !
+        .then(() => callData())
+        .then(() => textRef.current.focus());
+    }
   };
 
   const handleOnChangeCheck = (e) => {
