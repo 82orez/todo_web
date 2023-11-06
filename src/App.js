@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import TodoEditor from './components/TodoEditor';
 import { useEffect, useRef, useState } from 'react';
 import TodoList from './components/TodoList';
+import axios from 'axios';
 
 const DivApp = styled.div`
   max-width: 750px;
@@ -24,93 +25,72 @@ function App() {
   // 해결책: 서버 api 에 cors 를 적용할 것.
   const [todoLists, setTodoLists] = useState([]);
 
-  const callData = () => {
-    fetch(`${process.env.REACT_APP_API_URL}/todolist`)
-      .then((re) => re.json())
-      // .then((data) => setTodoLists(data))
-      .then((data) => {
-        console.log('good rendering');
-        setTodoLists(data);
-      })
-      .catch((e) => console.error(e));
+  const callData = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/todolist`);
+      setTodoLists(response.data);
+      console.log('good rendering');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  // !
-  useEffect(callData, []);
+  useEffect(() => {
+    callData().then();
+  }, []);
 
   const handleOnChange = (e) => {
     setText(e.target.value);
   };
 
-  const handleOnClickAdd = () => {
+  const handleOnClickAdd = async () => {
     if (text.length === 0) {
       alert('할 일을 입력해 주세요');
       textRef.current.focus();
       return;
     }
 
-    fetch(`${process.env.REACT_APP_API_URL}/todolist`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/todolist`, {
         isDone: false,
         content: text,
         createdDate: new Date().toLocaleDateString(),
-      }),
-    })
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      // !
-      .then(() => callData())
-      .then(() => {
-        setText('');
-        textRef.current.value = '';
-        textRef.current.focus();
       });
-  };
-
-  const handleOnClickDel = (e) => {
-    // 사용자에게 확인 메시지를 보여줍니다.
-    const userConfirm = window.confirm('정말로 삭제하시겠습니까?');
-
-    // 만약 사용자가 'OK' 를 클릭했다면, 삭제 요청을 진행합니다.
-    if (userConfirm) {
-      fetch(`${process.env.REACT_APP_API_URL}/todolist`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          // id 값을 받아오기 위해 button 태그의 value 값을 이용.
-          id: e.target.value,
-        }),
-      })
-        .then((response) => response.json())
-        .then((result) => console.log(result))
-        // !
-        .then(() => callData())
-        .then(() => textRef.current.focus());
+      await callData();
+      setText('');
+      textRef.current.value = '';
+      textRef.current.focus();
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const handleOnChangeCheck = (e) => {
-    fetch(`${process.env.REACT_APP_API_URL}/todolist`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+  const handleOnClickDel = async (e) => {
+    const userConfirm = window.confirm('정말로 삭제하시겠습니까?');
+
+    if (userConfirm) {
+      try {
+        await axios.delete(`${process.env.REACT_APP_API_URL}/todolist`, {
+          data: { id: e.target.value }
+        });
+        await callData();
+        textRef.current.focus();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleOnChangeCheck = async (e) => {
+    try {
+      await axios.put(`${process.env.REACT_APP_API_URL}/todolist`, {
         id: e.target.value,
-        // ! 기존 값에서 바뀐(changed) checked 값을 API 로 넘겨 줌.
         isDone: e.target.checked,
-      }),
-    })
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      // !
-      .then(() => callData());
+      });
+      await callData();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -118,7 +98,7 @@ function App() {
       <Header />
       <TodoEditor handleOnChange={handleOnChange} handleOnClickAdd={handleOnClickAdd} textRef={textRef} />
       <TodoList todoLists={todoLists} handleOnClickDel={handleOnClickDel} handleOnChangeCheck={handleOnChangeCheck} />
-      <h6>v1.0</h6>
+      <h6>v1.1</h6>
     </DivApp>
   );
 }
